@@ -1,0 +1,630 @@
+/* ============================================================
+   AI Student Toolkit — dashboard.css
+   Dashboard, tool cards, resume, notes, ppt, mindmap styles
+   ============================================================ */
+
+/* ── Dashboard Hero ─────────────────────────────────────────── */
+.page-hero {
+  margin-bottom: 32px;
+}
+.hero-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.hero-title span { color: var(--pink-dark); }
+.hero-subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  max-width: 520px;
+}
+
+/* ── Tool Grid ──────────────────────────────────────────────── */
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.tool-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.tool-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+.tool-card:focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; }
+
+.tool-card-icon {
+  width: 56px; height: 56px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+}
+.tool-card-body { flex: 1; }
+.tool-card-title { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.tool-card-desc  { font-size: 0.875rem; color: var(--text-muted); line-height: 1.55; }
+
+.tool-card-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  color: white;
+  width: 100%;
+}
+.tool-card-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+/* ── Page Tool Header ───────────────────────────────────────── */
+.tool-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.tool-header-icon {
+  width: 52px; height: 52px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: white;
+  flex-shrink: 0;
+}
+.tool-header-text h1 { font-size: 1.4rem; font-weight: 800; color: var(--text); }
+.tool-header-text p  { font-size: 0.875rem; color: var(--text-muted); margin-top: 4px; }
+
+/* ── Two-Column Tool Layout ─────────────────────────────────── */
+.tool-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.tool-layout-full { grid-template-columns: 1fr; }
+
+/* ── Resume Page ────────────────────────────────────────────── */
+.resume-form-scroll {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-right: 4px;
+}
+
+/* LaTeX-style resume preview */
+.resume-preview-wrap {
+  position: sticky;
+  top: 80px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.resume-preview {
+  background: #ffffff;
+  color: #1a1a1a;
+  font-family: 'Computer Modern', 'Latin Modern', Georgia, 'Times New Roman', serif;
+  font-size: 10.5pt;
+  line-height: 1.45;
+  padding: 40px 44px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  border-radius: 2px;
+  min-height: 500px;
+}
+
+.resume-preview h1.resume-name {
+  font-size: 20pt;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.04em;
+  color: #111;
+  margin-bottom: 4px;
+  font-family: inherit;
+}
+.resume-preview .resume-contact {
+  text-align: center;
+  font-size: 9pt;
+  color: #333;
+  margin-bottom: 16px;
+}
+.resume-preview .resume-contact a { color: #1a1a1a; text-decoration: underline; }
+.resume-preview hr.resume-line {
+  border: none;
+  border-top: 1.2px solid #333;
+  margin: 4px 0 10px;
+}
+.resume-preview .resume-section-title {
+  font-size: 10.5pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #111;
+  margin-bottom: 6px;
+  margin-top: 14px;
+}
+.resume-preview .resume-subsection {
+  margin-bottom: 8px;
+}
+.resume-preview .resume-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10pt;
+}
+.resume-preview .resume-role { font-weight: 700; }
+.resume-preview .resume-date { font-style: italic; color: #444; }
+.resume-preview .resume-org  { color: #222; font-style: italic; }
+.resume-preview ul.resume-bullets {
+  list-style: disc;
+  padding-left: 18px;
+  margin-top: 3px;
+}
+.resume-preview ul.resume-bullets li {
+  font-size: 10pt;
+  margin-bottom: 2px;
+  color: #1a1a1a;
+}
+.resume-preview .resume-skills-row {
+  font-size: 10pt;
+  margin-bottom: 3px;
+}
+.resume-preview .resume-skills-row strong { color: #111; }
+
+/* LaTeX source panel */
+.latex-source-wrap {
+  background: #1e1e2e;
+  border-radius: var(--radius-md);
+  padding: 20px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+.latex-source-wrap pre {
+  color: #cdd6f4;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Resume tabs */
+.resume-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+}
+.resume-tab {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+.resume-tab.active {
+  background: var(--white);
+  color: var(--pink-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Notes Page ─────────────────────────────────────────────── */
+.notes-options {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.notes-option-btn {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 2px solid var(--border);
+  background: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--grey-dark);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.notes-option-btn.active {
+  border-color: var(--mint);
+  background: var(--mint-light);
+  color: var(--mint-dark);
+}
+.notes-option-btn:hover:not(.active) { border-color: var(--mint); color: var(--mint-dark); }
+
+.notes-output {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  padding: 28px;
+  min-height: 400px;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+.notes-output h1, .notes-output h2 { margin-top: 18px; margin-bottom: 8px; color: var(--text); }
+.notes-output h1 { font-size: 1.2rem; border-bottom: 2px solid var(--mint-light); padding-bottom: 6px; }
+.notes-output h2 { font-size: 1rem; color: var(--mint-dark); }
+.notes-output h3 { font-size: 0.95rem; font-weight: 700; margin-top: 12px; }
+.notes-output ul, .notes-output ol { padding-left: 22px; margin: 8px 0; }
+.notes-output li { margin-bottom: 4px; }
+.notes-output strong { color: var(--text); }
+.notes-output code { background: var(--grey); padding: 1px 5px; border-radius: 3px; font-family: var(--font-mono); font-size: 0.85em; }
+.notes-output blockquote { border-left: 3px solid var(--mint); padding: 8px 16px; background: var(--mint-light); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin: 10px 0; }
+.notes-output table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+.notes-output th, .notes-output td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; font-size: 0.875rem; }
+.notes-output th { background: var(--bg); font-weight: 700; }
+.notes-output hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+/* ── PPT Page ───────────────────────────────────────────────── */
+.slide-viewer {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.slide-display {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  min-height: 380px;
+  padding: 48px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+.slide-number-badge {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+.slide-title-el {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 24px;
+  line-height: 1.25;
+}
+.slide-bullets { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.slide-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: #cbd5e1;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.slide-bullets li::before {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--pink);
+  margin-top: 7px;
+  flex-shrink: 0;
+}
+
+.slide-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+.slide-nav-group { display: flex; align-items: center; gap: 10px; }
+.slide-counter { font-size: 0.875rem; font-weight: 600; color: var(--grey-dark); }
+.slide-dots { display: flex; gap: 6px; }
+.slide-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+  border: none;
+}
+.slide-dot.active { background: var(--blue-dark); transform: scale(1.3); }
+
+/* PPT slide deck thumbnail list */
+.slide-deck-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.slide-thumb {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+  background: var(--white);
+}
+.slide-thumb:hover { border-color: var(--blue); background: var(--blue-light); }
+.slide-thumb.active { border-color: var(--blue-dark); background: var(--blue-light); }
+.slide-thumb-num { font-size: 0.75rem; font-weight: 700; color: var(--blue-dark); min-width: 20px; }
+.slide-thumb-title { font-size: 0.82rem; font-weight: 600; color: var(--text); }
+
+/* ── Mind Map Page ──────────────────────────────────────────── */
+.mindmap-canvas-wrap {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  position: relative;
+  min-height: 520px;
+}
+.mindmap-canvas {
+  width: 100%;
+  min-height: 520px;
+  overflow: auto;
+  cursor: grab;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 30px;
+}
+.mindmap-canvas:active { cursor: grabbing; }
+.mindmap-controls {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+}
+
+/* HTML tree mind map */
+.mm-tree { font-size: 0.82rem; user-select: none; }
+.mm-node { display: flex; flex-direction: column; }
+.mm-node-children { display: flex; flex-direction: column; border-left: 2px solid var(--border); margin-left: 20px; padding-left: 16px; margin-top: 4px; gap: 4px; }
+.mm-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  white-space: nowrap;
+  margin: 2px 0;
+}
+.mm-label:hover { transform: scale(1.04); box-shadow: var(--shadow-md); }
+.mm-label.depth-0 { background: linear-gradient(135deg, var(--pink-light), var(--pink)); color: #fff; font-size: 0.95rem; padding: 8px 20px; }
+.mm-label.depth-1 { background: var(--mint-light); color: var(--mint-dark); }
+.mm-label.depth-2 { background: var(--blue-light); color: var(--blue-dark); }
+.mm-label.depth-3 { background: var(--purple-light); color: var(--purple-dark); }
+.mm-toggle { background: none; border: none; cursor: pointer; color: inherit; opacity: 0.7; font-size: 0.75rem; }
+.mm-node-children.collapsed { display: none; }
+
+/* Explanation panel */
+.explain-panel {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  padding: 20px;
+  margin-top: 16px;
+}
+.explain-panel h4 { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.explain-panel p  { font-size: 0.875rem; color: var(--grey-dark); line-height: 1.65; }
+
+
+/* ── Quiz Styles ────────────────────────────────────────────── */
+.quiz-progress {
+  height: 6px;
+  background: var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.quiz-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #f6e05e, #d69e2e);
+  border-radius: 20px;
+  transition: width 0.4s ease;
+}
+.quiz-question {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  font-size: 0.9rem;
+  color: var(--text);
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+  width: 100%;
+}
+.quiz-option-clickable { cursor: pointer; }
+.quiz-option-clickable:hover { border-color: #d69e2e; background: #fefcbf; }
+.quiz-option.correct  { border-color: #276749; background: #c6f6d5; color: #276749; }
+.quiz-option.wrong    { border-color: #c53030; background: #fff5f5; color: #c53030; }
+.quiz-option-letter {
+  width: 26px; height: 26px;
+  background: var(--bg);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.quiz-explanation {
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: #fefcbf;
+  border-left: 3px solid #d69e2e;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 0.875rem;
+  color: #744210;
+  line-height: 1.55;
+}
+
+/* ── Chat / Doubt Solver Styles ─────────────────────────────── */
+.chat-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+.chat-msg { display: flex; flex-direction: column; }
+.chat-msg-user { align-items: flex-end; }
+.chat-msg-ai   { align-items: flex-start; }
+.chat-bubble {
+  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.chat-bubble-user {
+  background: linear-gradient(135deg, #fc8181, #e53e3e);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.chat-bubble-ai {
+  background: var(--white);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-bottom-left-radius: 4px;
+  box-shadow: var(--shadow-sm);
+}
+.chat-ai-content h1,.chat-ai-content h2,.chat-ai-content h3 { margin: 10px 0 6px; font-size: 0.95rem; }
+.chat-ai-content ul,.chat-ai-content ol { padding-left: 18px; margin: 6px 0; }
+.chat-ai-content li { margin-bottom: 3px; }
+.chat-ai-content strong { color: var(--text); }
+.chat-ai-content code { background: var(--bg); padding: 1px 5px; border-radius: 3px; font-family: var(--font-mono); font-size: 0.85em; }
+
+/* Typing indicator */
+.chat-typing { display: flex; gap: 5px; align-items: center; padding: 4px 2px; }
+.chat-typing span {
+  width: 8px; height: 8px;
+  background: var(--grey-mid);
+  border-radius: 50%;
+  animation: typingBounce 1.2s infinite;
+}
+.chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+.chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+
+/* ── Flashcard Styles ───────────────────────────────────────── */
+.fc-scene {
+  width: 100%;
+  height: 220px;
+  perspective: 900px;
+  cursor: pointer;
+  outline: none;
+}
+.fc-scene:focus-visible .fc-card { box-shadow: 0 0 0 3px var(--mint); }
+.fc-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--radius-lg);
+}
+.fc-card.is-flipped { transform: rotateY(180deg); }
+.fc-front, .fc-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+.fc-front { background: linear-gradient(135deg, #c6f6d5, #f0fff4); }
+.fc-back  { background: linear-gradient(135deg, #bee3f8, #ebf8ff); transform: rotateY(180deg); }
+.fc-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--grey-mid);
+  margin-bottom: 10px;
+}
+.fc-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ── OCR Drop Zone ──────────────────────────────────────────── */
+.ocr-dropzone {
+  border: 2.5px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ocr-dropzone:hover, .ocr-dropzone:focus-visible {
+  border-color: #ed8936;
+  background: #feebc8;
+  outline: none;
+}

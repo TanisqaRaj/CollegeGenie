@@ -1,0 +1,92 @@
+/* ============================================================
+   AI Student Toolkit — responsive.css
+   Tablet and mobile breakpoints
+   ============================================================ */
+
+/* ── Tablet (≤ 1024px) ──────────────────────────────────────── */
+@media (max-width: 1024px) {
+  :root { --sidebar-w: 200px; }
+
+  .tool-layout { grid-template-columns: 1fr; }
+  .resume-preview-wrap { position: static; max-height: none; }
+  .resume-form-scroll { max-height: none; }
+
+  .slide-display { min-height: 300px; padding: 36px 40px; }
+  .slide-title-el { font-size: 1.35rem; }
+  .slide-bullets li { font-size: 0.95rem; }
+
+  .form-row-3 { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Mobile (≤ 768px) ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Sidebar becomes off-canvas drawer */
+  .sidebar {
+    transform: translateX(-100%);
+    z-index: 300;
+    width: 260px;
+    box-shadow: var(--shadow-lg);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-close { display: flex; }
+
+  .main-wrapper { margin-left: 0; }
+
+  .hamburger { display: flex; }
+
+  /* Pages */
+  .page { padding: 20px 16px; }
+
+  /* Hero */
+  .hero-title { font-size: 1.35rem; }
+  .hero-subtitle { font-size: 0.875rem; }
+
+  /* Tool grid */
+  .tool-grid { grid-template-columns: 1fr; gap: 16px; }
+
+  /* Form rows collapse to single column */
+  .form-row   { grid-template-columns: 1fr; }
+  .form-row-3 { grid-template-columns: 1fr; }
+
+  /* Tool layout */
+  .tool-layout { grid-template-columns: 1fr; gap: 16px; }
+
+  /* Action bars */
+  .action-bar { padding: 12px 16px; gap: 8px; }
+  .action-bar .btn { flex: 1 1 calc(50% - 4px); justify-content: center; font-size: 0.8rem; padding: 9px 12px; }
+
+  /* Notes options */
+  .notes-options { flex-wrap: wrap; }
+  .notes-option-btn { flex: 1; text-align: center; }
+
+  /* Resume preview */
+  .resume-preview { padding: 24px 20px; font-size: 9.5pt; }
+  .resume-preview h1.resume-name { font-size: 15pt; }
+
+  /* PPT slide */
+  .slide-display { min-height: 240px; padding: 24px 24px; }
+  .slide-title-el { font-size: 1.1rem; margin-bottom: 16px; }
+  .slide-bullets li { font-size: 0.875rem; }
+
+  /* Mind map */
+  .mindmap-canvas { padding: 16px; }
+  .mm-label { font-size: 0.78rem; padding: 5px 12px; }
+  .mm-label.depth-0 { font-size: 0.85rem; }
+
+  /* Breadcrumb */
+  .breadcrumb { font-size: 0.8rem; }
+
+  /* Tool header */
+  .tool-header h1 { font-size: 1.15rem; }
+  .tool-header p  { font-size: 0.82rem; }
+}
+
+/* ── Small Mobile (≤ 420px) ─────────────────────────────────── */
+@media (max-width: 420px) {
+  .action-bar .btn { flex: 1 1 100%; }
+  .resume-tabs .resume-tab { font-size: 0.75rem; padding: 7px 8px; }
+  .notes-options { gap: 6px; }
+  .notes-option-btn { font-size: 0.78rem; padding: 6px 10px; }
+  .slide-title-el { font-size: 1rem; }
+  .slide-display { padding: 20px 18px; }
+}
