@@ -16,7 +16,8 @@
     doubt:      window.DoubtSolverModule,
     flashcards: window.FlashcardsModule,
     planner:    window.StudyPlannerModule,
-    ocr:        window.OCRSummarizerModule
+    ocr:        window.OCRSummarizerModule,
+    sheets:     window.GoogleSheetsModule
   };
 
   const pageLabels = {
@@ -29,7 +30,8 @@
     doubt:      'Doubt Solver',
     flashcards: 'Flashcard Generator',
     planner:    'Study Planner',
-    ocr:        'Notes Summarizer'
+    ocr:        'Notes Summarizer',
+    sheets:     'Google Sheets Live Data'
   };
 
   // ── Demo Status ────────────────────────────────────────────

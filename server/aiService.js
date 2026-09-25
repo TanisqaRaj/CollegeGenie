@@ -168,7 +168,9 @@ const demoData = {
   summarizer: {
     extractedText: "Natural Language Processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence...",
     summary: "## Summary\nNatural Language Processing (NLP) is a field combining linguistics, computer science, and AI that focuses on enabling computers to understand, process, and generate human language.\n\n## Key Terms\n- **NLP** — Natural Language Processing\n- **Speech Recognition** — Converting spoken words to text"
-  }
+  },
+
+  'google-sheets-insights': `### Class Overview\nThe class has a total of 8 students across subjects including Artificial Intelligence, DBMS, Computer Networks, NLP, and Machine Learning. Overall performance is strong with an average score above 85.\n\n### Performance\nStudents in Machine Learning and AI show consistently high marks (85–92 range), suggesting good engagement with these topics. DBMS students show slightly lower scores, which may benefit from additional revision or practice sessions.\n\n### Attendance\nAttendance is generally high across the class (88–97%). Sneha Joshi's attendance of 82% is the lowest and may require a check-in to ensure no academic impact.\n\n### Important Observations\n- Rohan Kapoor has the highest combined marks (92) and attendance (97%), an excellent model student.\n- Sneha Joshi's lower attendance combined with below-average marks (74) warrants early intervention.\n- The class average attendance of 91.5% reflects strong student engagement overall.`
 };
 
 // ─── AI Provider Calls ────────────────────────────────────────────────────────
@@ -414,6 +416,31 @@ ${text}`;
   return { systemPrompt, userPrompt };
 }
 
+function buildGoogleSheetsInsightsPrompt(prompt, data) {
+  const systemPrompt = `You are an academic data analyst helping a teacher review student performance. Analyse the student records provided and give a clear, structured summary in Markdown format with these four sections:
+
+### Class Overview
+A 2-3 sentence summary of the class.
+
+### Performance
+Key observations about marks and subject trends.
+
+### Attendance
+Key observations about attendance patterns.
+
+### Important Observations
+2-4 specific, actionable insights for the teacher.
+
+Rules:
+- Be factual — only draw conclusions supported by the data.
+- Do not invent data or make assumptions beyond what is given.
+- Keep each section concise (3-5 sentences max).
+- Do not expose personally sensitive information unnecessarily.`;
+
+  const userPrompt = `${prompt}\n\nStudent records:\n${JSON.stringify(data, null, 2)}`;
+  return { systemPrompt, userPrompt };
+}
+
 // ─── JSON tools (must return parsed objects) ──────────────────────────────────
 const JSON_TOOLS = new Set(['resume', 'ppt', 'mindmap', 'quiz', 'flashcards', 'study-planner']);
 
@@ -472,6 +499,9 @@ async function processAIRequest(tool, payload) {
       break;
     case 'summarizer':
       ({ systemPrompt, userPrompt } = buildSummarizerPrompt(payload.text));
+      break;
+    case 'google-sheets-insights':
+      ({ systemPrompt, userPrompt } = buildGoogleSheetsInsightsPrompt(payload.prompt, payload.data));
       break;
     default:
       throw new Error(`Unknown tool: ${tool}`);

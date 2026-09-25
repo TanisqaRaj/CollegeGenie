@@ -1,7 +1,7 @@
 {
-  "name": "ai-student-toolkit",
+  "name": "collegegenie",
   "version": "1.0.0",
-  "description": "10 Smart AI Tools for Students - College Project",
+  "description": "CollegeGenie — 10 Smart AI Tools for Students",
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",

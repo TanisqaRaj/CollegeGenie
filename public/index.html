@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Student Toolkit</title>
-  <meta name="description" content="10 Smart AI Tools for Students — Resume Builder, Notes Generator, PPT Generator, Mind Map Generator and more." />
+  <title>CollegeGenie</title>
+  <meta name="description" content="CollegeGenie — 10 Smart AI Tools for Students: Resume Builder, Notes Generator, PPT Generator, Mind Map Generator and more." />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -30,8 +30,8 @@
           <i class="fas fa-graduation-cap"></i>
         </div>
         <div class="logo-text">
-          <span class="logo-name">AI Student</span>
-          <span class="logo-sub">Toolkit</span>
+          <span class="logo-name">CollegeGenie</span>
+          <span class="logo-sub">AI Toolkit</span>
         </div>
       </div>
       <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">
@@ -107,6 +107,14 @@
           </button>
         </li>
 
+        <li class="nav-section-label">Data Tools</li>
+        <li>
+          <button class="nav-item" data-page="sheets">
+            <span class="nav-icon"><i class="fas fa-table"></i></span>
+            <span class="nav-label">Google Sheets</span>
+          </button>
+        </li>
+
       </ul>
     </nav>
 
@@ -147,7 +155,7 @@
     <main id="page-dashboard" class="page active" role="main">
 
       <div class="page-hero">
-        <h1 class="hero-title">Your <span>AI Academic Workspace</span></h1>
+        <h1 class="hero-title">Welcome to <span>CollegeGenie</span></h1>
         <p class="hero-subtitle">Ten AI-powered tools to help you study smarter, write better, and achieve more — all in one place.</p>
       </div>
 
@@ -279,6 +287,20 @@
           </button>
         </article>
 
+        <!-- Google Sheets -->
+        <article class="tool-card" role="listitem" tabindex="0" data-page="sheets">
+          <div class="tool-card-icon" style="background:#0E5D6C;">
+            <i class="fas fa-table"></i>
+          </div>
+          <div class="tool-card-body">
+            <h2 class="tool-card-title">Google Sheets Live Data</h2>
+            <p class="tool-card-desc">Use Google Sheets as a live backend. Connect via Apps Script, fetch records, and analyse with AI.</p>
+          </div>
+          <button class="tool-card-btn" data-page="sheets">
+            Open Tool <i class="fas fa-arrow-right"></i>
+          </button>
+        </article>
+
       </div>
     </main>
 
@@ -309,6 +331,9 @@
     <!-- OCR Summarizer -->
     <main id="page-ocr" class="page" role="main" aria-label="AI Notes Summarizer"></main>
 
+    <!-- Google Sheets Live Data -->
+    <main id="page-sheets" class="page" role="main" aria-label="Google Sheets Live Data"></main>
+
   </div><!-- /.main-wrapper -->
 
   <!-- ── External Libraries ────────────────────────────────────────── -->
@@ -336,6 +361,7 @@
   <script src="js/modules/flashcards.js"></script>
   <script src="js/modules/studyPlanner.js"></script>
   <script src="js/modules/ocrSummarizer.js"></script>
+  <script src="js/modules/googleSheets.js"></script>
   <script src="js/app.js"></script>
 
 </body>

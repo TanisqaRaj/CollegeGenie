@@ -8,7 +8,7 @@ const { processAIRequest } = require('../aiService');
 router.post('/', async (req, res) => {
   const { tool, payload } = req.body;
 
-  const validTools = ['resume', 'notes', 'ppt', 'mindmap', 'explain', 'quiz', 'doubt-solver', 'flashcards', 'study-planner', 'summarizer'];
+  const validTools = ['resume', 'notes', 'ppt', 'mindmap', 'explain', 'quiz', 'doubt-solver', 'flashcards', 'study-planner', 'summarizer', 'google-sheets-insights'];
   if (!tool || !validTools.includes(tool)) {
     return res.status(400).json({ success: false, error: 'Invalid or missing tool name.' });
   }
