@@ -524,9 +524,18 @@ async function processAIRequest(tool, payload) {
       console.error(`[AI Service] Attempt ${attempt} error: status=${status}`, errData);
 
       if (status === 401) throw new Error('Invalid API key. Please check your AI_API_KEY in .env');
-      if (status === 503) throw new Error('OpenAI is temporarily unavailable. Please try again shortly.');
       if (err.code === 'ECONNABORTED' || err.code === 'ETIMEDOUT') throw new Error('Request timed out. The AI took too long to respond.');
       if (err.code === 'ENOTFOUND') throw new Error('Cannot reach the AI service. Check your internet connection.');
+
+      if (status === 503) {
+        if (attempt < 3) {
+          const wait = retryDelays[attempt - 1];
+          console.log(`[AI Service] Service overloaded (503) — waiting ${wait / 1000}s before retry ${attempt + 1}...`);
+          await new Promise(r => setTimeout(r, wait));
+          continue;
+        }
+        throw new Error('The AI service is temporarily overloaded. Please try again in a moment.');
+      }
 
       if (status === 429) {
         // Honour Retry-After header if present
