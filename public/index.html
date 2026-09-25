@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Student Toolkit</title>
-  <meta name="description" content="10 Smart AI Tools for Students - Resume Builder, Notes Generator, PPT Generator, Mind Map Generator" />
+  <meta name="description" content="10 Smart AI Tools for Students — Resume Builder, Notes Generator, PPT Generator, Mind Map Generator and more." />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,9 +23,12 @@
 
   <!-- ── Sidebar ──────────────────────────────────────────────────── -->
   <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+
     <div class="sidebar-header">
       <div class="logo">
-        <span class="logo-icon">🎓</span>
+        <div class="logo-icon">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
         <div class="logo-text">
           <span class="logo-name">AI Student</span>
           <span class="logo-sub">Toolkit</span>
@@ -38,6 +41,7 @@
 
     <nav class="sidebar-nav">
       <ul role="list">
+
         <li>
           <button class="nav-item active" data-page="dashboard" aria-current="page">
             <span class="nav-icon"><i class="fas fa-th-large"></i></span>
@@ -102,6 +106,7 @@
             <span class="nav-label">Notes Summarizer</span>
           </button>
         </li>
+
       </ul>
     </nav>
 
@@ -140,126 +145,136 @@
 
     <!-- Dashboard -->
     <main id="page-dashboard" class="page active" role="main">
+
       <div class="page-hero">
-        <h1 class="hero-title">Welcome to AI Student Toolkit</h1>
-        <p class="hero-subtitle">Smart AI tools designed to help you study smarter, build better, and achieve more.</p>
+        <h1 class="hero-title">Your <span>AI Academic Workspace</span></h1>
+        <p class="hero-subtitle">Ten AI-powered tools to help you study smarter, write better, and achieve more — all in one place.</p>
       </div>
 
       <div class="tool-grid" role="list">
 
+        <!-- Resume Builder -->
         <article class="tool-card" role="listitem" tabindex="0" data-page="resume">
-          <div class="tool-card-icon" style="background: linear-gradient(135deg, #fbb6ce, #f687b3);">
+          <div class="tool-card-icon" style="background:#0E5D6C;">
             <i class="fas fa-file-alt"></i>
           </div>
           <div class="tool-card-body">
             <h2 class="tool-card-title">AI Resume Builder</h2>
-            <p class="tool-card-desc">Create a professional ATS-friendly LaTeX-style resume using AI.</p>
+            <p class="tool-card-desc">Create a professional ATS-friendly resume using AI-powered grammar and formatting.</p>
           </div>
-          <button class="tool-card-btn btn-pink" data-page="resume">
+          <button class="tool-card-btn" data-page="resume">
             Open Tool <i class="fas fa-arrow-right"></i>
           </button>
         </article>
 
+        <!-- Notes Generator -->
         <article class="tool-card" role="listitem" tabindex="0" data-page="notes">
-          <div class="tool-card-icon" style="background: linear-gradient(135deg, #b2f5ea, #4fd1c5);">
+          <div class="tool-card-icon" style="background:#008180;">
             <i class="fas fa-book-open"></i>
           </div>
           <div class="tool-card-body">
             <h2 class="tool-card-title">AI Notes Generator</h2>
-            <p class="tool-card-desc">Convert long study material into structured revision notes.</p>
+            <p class="tool-card-desc">Convert long study material into structured short, detailed, or exam-focused notes.</p>
           </div>
-          <button class="tool-card-btn btn-mint" data-page="notes">
+          <button class="tool-card-btn" data-page="notes">
             Open Tool <i class="fas fa-arrow-right"></i>
           </button>
         </article>
 
+        <!-- PPT Generator -->
         <article class="tool-card" role="listitem" tabindex="0" data-page="ppt">
-          <div class="tool-card-icon" style="background: linear-gradient(135deg, #bee3f8, #63b3ed);">
+          <div class="tool-card-icon" style="background:#0a9e9d;">
             <i class="fas fa-desktop"></i>
           </div>
           <div class="tool-card-body">
             <h2 class="tool-card-title">AI PPT Generator</h2>
-            <p class="tool-card-desc">Generate slide-wise presentation content from any topic.</p>
+            <p class="tool-card-desc">Generate a complete slide deck with slide-by-slide navigation and PPTX download.</p>
           </div>
-          <button class="tool-card-btn btn-blue" data-page="ppt">
+          <button class="tool-card-btn" data-page="ppt">
             Open Tool <i class="fas fa-arrow-right"></i>
           </button>
         </article>
 
+        <!-- Mind Map -->
         <article class="tool-card" role="listitem" tabindex="0" data-page="mindmap">
-          <div class="tool-card-icon" style="background: linear-gradient(135deg, #e9d8fd, #b794f4);">
+          <div class="tool-card-icon" style="background:#2e9e6b;">
             <i class="fas fa-project-diagram"></i>
           </div>
           <div class="tool-card-body">
             <h2 class="tool-card-title">AI Mind Map Generator</h2>
-            <p class="tool-card-desc">Convert syllabus and topics into a visual hierarchical mind map.</p>
+            <p class="tool-card-desc">Convert a syllabus into a visual collapsible mind map with click-to-explain nodes.</p>
           </div>
-          <button class="tool-card-btn btn-purple" data-page="mindmap">
+          <button class="tool-card-btn" data-page="mindmap">
             Open Tool <i class="fas fa-arrow-right"></i>
           </button>
         </article>
 
+        <!-- Quiz Generator -->
         <article class="tool-card" role="listitem" tabindex="0" data-page="quiz">
-          <div class="tool-card-icon" style="background: linear-gradient(135deg, #fefcbf, #f6e05e);">
+          <div class="tool-card-icon" style="background:#c97a1a;">
             <i class="fas fa-question-circle"></i>
           </div>
           <div class="tool-card-body">
             <h2 class="tool-card-title">AI Quiz Generator</h2>
-            <p class="tool-card-desc">Generate MCQ quizzes on any topic and test your knowledge instantly.</p>
+            <p class="tool-card-desc">Generate MCQ quizzes on any topic and test your knowledge instantly with feedback.</p>
           </div>
-          <button class="tool-card-btn" style="background:linear-gradient(135deg,#f6e05e,#d69e2e);color:#fff;" data-page="quiz">
+          <button class="tool-card-btn" data-page="quiz">
             Open Tool <i class="fas fa-arrow-right"></i>
           </button>
         </article>
 
+        <!-- Doubt Solver -->
         <article class="tool-card" role="listitem" tabindex="0" data-page="doubt">
-          <div class="tool-card-icon" style="background: linear-gradient(135deg, #fed7e2, #fc8181);">
+          <div class="tool-card-icon" style="background:#c0395a;">
             <i class="fas fa-comments"></i>
           </div>
           <div class="tool-card-body">
             <h2 class="tool-card-title">AI Doubt Solver</h2>
-            <p class="tool-card-desc">Ask any academic question and get clear, student-friendly AI explanations.</p>
+            <p class="tool-card-desc">Ask any academic question and get clear, student-friendly AI explanations instantly.</p>
           </div>
-          <button class="tool-card-btn" style="background:linear-gradient(135deg,#fc8181,#e53e3e);color:#fff;" data-page="doubt">
+          <button class="tool-card-btn" data-page="doubt">
             Open Tool <i class="fas fa-arrow-right"></i>
           </button>
         </article>
 
+        <!-- Flashcards -->
         <article class="tool-card" role="listitem" tabindex="0" data-page="flashcards">
-          <div class="tool-card-icon" style="background: linear-gradient(135deg, #c6f6d5, #48bb78);">
+          <div class="tool-card-icon" style="background:#0E5D6C;">
             <i class="fas fa-layer-group"></i>
           </div>
           <div class="tool-card-body">
             <h2 class="tool-card-title">AI Flashcard Generator</h2>
-            <p class="tool-card-desc">Generate interactive flip flashcards for any topic to boost your memory.</p>
+            <p class="tool-card-desc">Generate interactive flip flashcards on any topic to strengthen memory and recall.</p>
           </div>
-          <button class="tool-card-btn" style="background:linear-gradient(135deg,#48bb78,#276749);color:#fff;" data-page="flashcards">
+          <button class="tool-card-btn" data-page="flashcards">
             Open Tool <i class="fas fa-arrow-right"></i>
           </button>
         </article>
 
+        <!-- Study Planner -->
         <article class="tool-card" role="listitem" tabindex="0" data-page="planner">
-          <div class="tool-card-icon" style="background: linear-gradient(135deg, #bee3f8, #4299e1);">
+          <div class="tool-card-icon" style="background:#008180;">
             <i class="fas fa-calendar-alt"></i>
           </div>
           <div class="tool-card-body">
             <h2 class="tool-card-title">AI Study Planner</h2>
-            <p class="tool-card-desc">Generate a personalized weekly study timetable based on your exams and goals.</p>
+            <p class="tool-card-desc">Generate a personalized weekly timetable based on your subjects, exams, and goals.</p>
           </div>
-          <button class="tool-card-btn btn-blue" data-page="planner">
+          <button class="tool-card-btn" data-page="planner">
             Open Tool <i class="fas fa-arrow-right"></i>
           </button>
         </article>
 
+        <!-- OCR Notes Summarizer -->
         <article class="tool-card" role="listitem" tabindex="0" data-page="ocr">
-          <div class="tool-card-icon" style="background: linear-gradient(135deg, #feebc8, #ed8936);">
+          <div class="tool-card-icon" style="background:#7c5cbf;">
             <i class="fas fa-camera"></i>
           </div>
           <div class="tool-card-body">
             <h2 class="tool-card-title">AI Notes Summarizer</h2>
-            <p class="tool-card-desc">Upload a photo of your notes — OCR extracts text, AI generates a summary.</p>
+            <p class="tool-card-desc">Upload a photo of your handwritten notes — OCR extracts text, AI generates a summary.</p>
           </div>
-          <button class="tool-card-btn" style="background:linear-gradient(135deg,#ed8936,#c05621);color:#fff;" data-page="ocr">
+          <button class="tool-card-btn" data-page="ocr">
             Open Tool <i class="fas fa-arrow-right"></i>
           </button>
         </article>
@@ -299,6 +314,7 @@
   <!-- ── External Libraries ────────────────────────────────────────── -->
   <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <!-- marked.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
   <!-- DOMPurify (sanitize AI HTML output) -->

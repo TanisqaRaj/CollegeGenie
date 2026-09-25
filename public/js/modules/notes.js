@@ -75,7 +75,7 @@ window.NotesModule = (() => {
 
     const btn = document.getElementById('btnGenNotes');
     Utils.setButtonLoading(btn, true);
-    Utils.showLoading('notesOutput', 'Generating structured notes...');
+    Utils.showLoading('notesOutput', 'Generating structured notes… (may retry if rate limited)');
 
     try {
       const result = await Api.generateNotes(input, selectedStyle);

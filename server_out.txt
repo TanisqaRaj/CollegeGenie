@@ -1,0 +1,6 @@
+
+✅  AI Student Toolkit running at http://localhost:3000
+📦  Mode: 🤖 AI Mode (openai)
+
+Press Ctrl+C to stop.
+

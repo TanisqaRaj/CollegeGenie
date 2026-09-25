@@ -1,14 +1,48 @@
-// aiService.js — Reusable AI service for all 4 tools
+// aiService.js — Reusable AI service for all tools
 // Supports OpenAI, Gemini, and Demo Mode
+
+'use strict';
 
 const axios = require('axios');
 
-const DEMO_MODE = process.env.DEMO_MODE === 'true';
-const AI_PROVIDER = (process.env.AI_PROVIDER || 'openai').toLowerCase();
-const AI_API_KEY = process.env.AI_API_KEY || '';
-const AI_MODEL = process.env.AI_MODEL || 'gpt-3.5-turbo';
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
-// ─── Demo Data ──────────────────────────────────────────────────────────────
+/** Read env vars fresh at call time so changes/restarts always take effect */
+function getConfig() {
+  return {
+    demoMode: process.env.DEMO_MODE === 'true',
+    provider: (process.env.AI_PROVIDER || 'openai').toLowerCase(),
+    apiKey: (process.env.AI_API_KEY || '').trim(),
+    model: (process.env.AI_MODEL || 'gpt-3.5-turbo').trim()
+  };
+}
+
+/**
+ * Strip markdown code fences that some models add around JSON, then parse.
+ * Tries multiple extraction strategies before giving up.
+ */
+function parseJSON(raw) {
+  // 1. Direct parse (model returned clean JSON)
+  try { return JSON.parse(raw); } catch (_) {}
+
+  // 2. Strip ```json … ``` or ``` … ``` fences
+  const fenceStripped = raw
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/\s*```\s*$/, '')
+    .trim();
+  try { return JSON.parse(fenceStripped); } catch (_) {}
+
+  // 3. Find the first { … } or [ … ] block in the string
+  const start = raw.search(/[{[]/);
+  const end   = Math.max(raw.lastIndexOf('}'), raw.lastIndexOf(']'));
+  if (start !== -1 && end > start) {
+    try { return JSON.parse(raw.slice(start, end + 1)); } catch (_) {}
+  }
+
+  throw new Error('AI returned invalid JSON. Please try regenerating.');
+}
+
+// ─── Demo Data ────────────────────────────────────────────────────────────────
 
 const demoData = {
   resume: {
@@ -83,233 +117,67 @@ const demoData = {
     ]
   },
 
-  notes: `# Introduction to Machine Learning
-
-## What is Machine Learning?
-Machine Learning (ML) is a subset of Artificial Intelligence (AI) that enables systems to **learn from data** and improve their performance without being explicitly programmed.
-
-> **Key Idea:** Instead of writing rules manually, we feed data to an algorithm and let it discover patterns.
-
----
-
-## Types of Machine Learning
-
-### 1. Supervised Learning
-- The model learns from **labeled data** (input → output pairs).
-- **Examples:** Email spam detection, image classification, house price prediction.
-- **Algorithms:** Linear Regression, Decision Trees, SVM, Neural Networks.
-
-### 2. Unsupervised Learning
-- The model finds **hidden patterns** in unlabeled data.
-- **Examples:** Customer segmentation, anomaly detection, topic modeling.
-- **Algorithms:** K-Means Clustering, PCA, Autoencoders.
-
-### 3. Reinforcement Learning
-- An agent learns by **interacting with an environment** and receiving rewards/penalties.
-- **Examples:** Game-playing AI, robotics, self-driving cars.
-- **Key Concepts:** Agent, Environment, State, Action, Reward.
-
----
-
-## Important Terminology
-
-| Term | Definition |
-|------|-----------|
-| **Feature** | An input variable used for prediction |
-| **Label** | The output variable (in supervised learning) |
-| **Training Data** | Data used to train the model |
-| **Test Data** | Data used to evaluate the model |
-| **Overfitting** | Model performs well on training data but poorly on new data |
-| **Underfitting** | Model is too simple to capture patterns |
-
----
-
-## The ML Workflow
-
-1. **Data Collection** — Gather relevant data
-2. **Data Preprocessing** — Clean, normalize, handle missing values
-3. **Feature Engineering** — Select/create meaningful features
-4. **Model Selection** — Choose appropriate algorithm
-5. **Training** — Fit model to training data
-6. **Evaluation** — Measure accuracy, precision, recall, F1
-7. **Deployment** — Serve the model in production
-
----
-
-## 📝 Exam Tips
-- Supervised vs Unsupervised: **labeled vs unlabeled data**
-- Overfitting solution: **more data, regularization, dropout**
-- Bias-Variance tradeoff: **high bias = underfitting, high variance = overfitting**`,
+  notes: `# Introduction to Machine Learning\n\n## What is Machine Learning?\nMachine Learning (ML) is a subset of Artificial Intelligence (AI) that enables systems to **learn from data** and improve their performance without being explicitly programmed.\n\n> **Key Idea:** Instead of writing rules manually, we feed data to an algorithm and let it discover patterns.\n\n---\n\n## Types of Machine Learning\n\n### 1. Supervised Learning\n- The model learns from **labeled data** (input → output pairs).\n- **Examples:** Email spam detection, image classification, house price prediction.\n- **Algorithms:** Linear Regression, Decision Trees, SVM, Neural Networks.\n\n### 2. Unsupervised Learning\n- The model finds **hidden patterns** in unlabeled data.\n- **Examples:** Customer segmentation, anomaly detection, topic modeling.\n- **Algorithms:** K-Means Clustering, PCA, Autoencoders.\n\n### 3. Reinforcement Learning\n- An agent learns by **interacting with an environment** and receiving rewards/penalties.\n- **Examples:** Game-playing AI, robotics, self-driving cars.\n\n---\n\n## 📝 Exam Tips\n- Supervised vs Unsupervised: **labeled vs unlabeled data**\n- Overfitting solution: **more data, regularization, dropout**`,
 
   ppt: {
     presentationTitle: "Introduction to Artificial Intelligence",
     slides: [
-      {
-        title: "What is Artificial Intelligence?",
-        bullets: [
-          "AI is the simulation of human intelligence in machines",
-          "Enables computers to perform tasks that typically require human cognition",
-          "Key capabilities: learning, reasoning, problem-solving, perception",
-          "Founded as a field in 1956 at Dartmouth Conference"
-        ]
-      },
-      {
-        title: "Types of AI",
-        bullets: [
-          "Narrow AI (Weak AI): Designed for specific tasks — e.g., Siri, Chess engines",
-          "General AI (Strong AI): Human-level intelligence across all domains (theoretical)",
-          "Super AI: Surpasses human intelligence in all areas (future concept)",
-          "Most current AI systems are Narrow AI"
-        ]
-      },
-      {
-        title: "Machine Learning",
-        bullets: [
-          "Subset of AI: systems learn from data without explicit programming",
-          "Supervised Learning: learns from labeled input-output pairs",
-          "Unsupervised Learning: finds patterns in unlabeled data",
-          "Reinforcement Learning: learns through rewards and penalties"
-        ]
-      },
-      {
-        title: "Deep Learning & Neural Networks",
-        bullets: [
-          "Subset of ML inspired by the human brain's neural structure",
-          "Composed of layers of interconnected nodes (neurons)",
-          "Excels at image recognition, speech, and natural language processing",
-          "Requires large datasets and significant computational power"
-        ]
-      },
-      {
-        title: "Real-World Applications",
-        bullets: [
-          "Healthcare: Medical image diagnosis, drug discovery",
-          "Finance: Fraud detection, algorithmic trading",
-          "Transportation: Autonomous vehicles, route optimization",
-          "Entertainment: Recommendation systems (Netflix, Spotify)"
-        ]
-      },
-      {
-        title: "Challenges & Ethics",
-        bullets: [
-          "Bias in training data leads to unfair model outcomes",
-          "Privacy concerns with large-scale data collection",
-          "Lack of explainability in black-box models",
-          "Job displacement and socioeconomic impact"
-        ]
-      },
-      {
-        title: "The Future of AI",
-        bullets: [
-          "Multimodal AI: combining text, images, audio, and video",
-          "AI Agents: autonomous systems that take real-world actions",
-          "Edge AI: running models on devices without cloud dependency",
-          "Human-AI collaboration will define the next decade of work"
-        ]
-      }
+      { title: "What is Artificial Intelligence?", bullets: ["AI simulates human intelligence in machines", "Enables computers to learn, reason, and problem-solve", "Key capabilities: perception, language, decision-making", "Founded as a field in 1956 at Dartmouth Conference"] },
+      { title: "Types of AI", bullets: ["Narrow AI: designed for specific tasks (Siri, Chess)", "General AI: human-level across all domains (theoretical)", "Super AI: surpasses human intelligence (future concept)", "Most current AI is Narrow AI"] },
+      { title: "Machine Learning", bullets: ["Subset of AI: systems learn from data without explicit programming", "Supervised: learns from labeled input-output pairs", "Unsupervised: finds patterns in unlabeled data", "Reinforcement: learns through rewards and penalties"] }
     ]
   },
 
   mindmap: {
     title: "Artificial Intelligence",
     children: [
-      {
-        title: "Machine Learning",
-        children: [
-          { title: "Supervised Learning", children: [{ title: "Classification", children: [] }, { title: "Regression", children: [] }] },
-          { title: "Unsupervised Learning", children: [{ title: "Clustering", children: [] }, { title: "Dimensionality Reduction", children: [] }] },
-          { title: "Reinforcement Learning", children: [{ title: "Q-Learning", children: [] }, { title: "Policy Gradient", children: [] }] }
-        ]
-      },
-      {
-        title: "Deep Learning",
-        children: [
-          { title: "Neural Networks", children: [{ title: "CNN", children: [] }, { title: "RNN", children: [] }] },
-          { title: "Transformers", children: [{ title: "BERT", children: [] }, { title: "GPT", children: [] }] }
-        ]
-      },
-      {
-        title: "Natural Language Processing",
-        children: [
-          { title: "Text Classification", children: [] },
-          { title: "Named Entity Recognition", children: [] },
-          { title: "Machine Translation", children: [] }
-        ]
-      },
-      {
-        title: "Computer Vision",
-        children: [
-          { title: "Image Recognition", children: [] },
-          { title: "Object Detection", children: [] },
-          { title: "Image Segmentation", children: [] }
-        ]
-      },
-      {
-        title: "Applications",
-        children: [
-          { title: "Healthcare", children: [] },
-          { title: "Finance", children: [] },
-          { title: "Autonomous Vehicles", children: [] }
-        ]
-      }
+      { title: "Machine Learning", children: [{ title: "Supervised Learning", children: [] }, { title: "Unsupervised Learning", children: [] }] },
+      { title: "Deep Learning", children: [{ title: "Neural Networks", children: [] }, { title: "Transformers", children: [] }] },
+      { title: "Applications", children: [{ title: "Healthcare", children: [] }, { title: "Finance", children: [] }] }
     ]
   },
 
-  explanation: "This is a fundamental concept in computer science and artificial intelligence. It involves algorithms that enable systems to learn patterns from data, make decisions, and improve performance over time without being explicitly programmed for each task. Understanding this topic is essential for modern software development and data science careers.",
+  explanation: "This is a fundamental concept in computer science and artificial intelligence. It involves algorithms that enable systems to learn patterns from data, make decisions, and improve performance over time without being explicitly programmed for each task.",
 
   quiz: {
     title: "Machine Learning Quiz",
     questions: [
       { question: "What is Machine Learning?", options: ["A type of hardware", "A subset of AI that learns from data", "A programming language", "A database system"], correct: 1, explanation: "Machine Learning is a subset of AI that enables systems to learn from data without being explicitly programmed." },
-      { question: "Which learning type uses labeled data?", options: ["Unsupervised Learning", "Reinforcement Learning", "Supervised Learning", "Transfer Learning"], correct: 2, explanation: "Supervised Learning uses labeled input-output pairs to train models." },
-      { question: "What does 'overfitting' mean?", options: ["Model is too simple", "Model performs well only on training data", "Model has no parameters", "Model trains too fast"], correct: 1, explanation: "Overfitting occurs when a model memorizes training data and fails to generalize to new data." },
-      { question: "Which algorithm is used for classification?", options: ["K-Means", "Linear Regression", "PCA", "Decision Tree"], correct: 3, explanation: "Decision Trees are commonly used for classification tasks." },
-      { question: "What is a neural network?", options: ["A computer virus", "A biological brain model", "A computational model inspired by brain neurons", "A type of database"], correct: 2, explanation: "Neural networks are computational models inspired by biological neurons in the human brain." }
+      { question: "Which learning type uses labeled data?", options: ["Unsupervised Learning", "Reinforcement Learning", "Supervised Learning", "Transfer Learning"], correct: 2, explanation: "Supervised Learning uses labeled input-output pairs to train models." }
     ]
   },
 
-  'doubt-solver': "Supervised learning is a type of machine learning where the model learns from **labeled training data**. Each training example consists of an input and a corresponding correct output (label).\n\n**How it works:**\n1. You provide the model with many input-output pairs\n2. The model finds patterns that map inputs to outputs\n3. It then predicts outputs for new, unseen inputs\n\n**Real-world examples:**\n- Email spam detection (spam / not spam)\n- Image classification (cat / dog)\n- House price prediction\n\n**Key algorithms:** Linear Regression, Logistic Regression, Decision Trees, SVM, Neural Networks\n\n**Exam tip:** Supervised learning = labeled data = teacher showing examples to a student.",
+  'doubt-solver': "Supervised learning is a type of machine learning where the model learns from **labeled training data**. Each training example consists of an input and a corresponding correct output (label).\n\n**How it works:**\n1. You provide the model with many input-output pairs\n2. The model finds patterns that map inputs to outputs\n3. It then predicts outputs for new, unseen inputs",
 
   flashcards: {
     title: "Machine Learning Flashcards",
     cards: [
       { question: "What is Machine Learning?", answer: "Machine Learning is a branch of AI that enables systems to learn from data and improve performance without being explicitly programmed." },
-      { question: "What is Supervised Learning?", answer: "Supervised learning uses labeled training data (input-output pairs) to train a model to predict outputs for new inputs." },
-      { question: "What is Unsupervised Learning?", answer: "Unsupervised learning finds hidden patterns in unlabeled data without any predefined outputs. Examples: clustering, dimensionality reduction." },
-      { question: "What is Overfitting?", answer: "Overfitting occurs when a model performs very well on training data but poorly on new/test data because it memorizes rather than generalizes." },
-      { question: "What is a Neural Network?", answer: "A computational model inspired by biological neurons. It consists of layers of nodes that process data to recognize patterns." },
-      { question: "What is the Bias-Variance Tradeoff?", answer: "High bias = underfitting (model too simple). High variance = overfitting (model too complex). The goal is to find the right balance." },
-      { question: "What is a Training Set?", answer: "The subset of data used to train/fit the machine learning model." },
-      { question: "What is Cross-Validation?", answer: "A technique to evaluate model performance by splitting data into multiple train/test folds to reduce overfitting." }
+      { question: "What is Overfitting?", answer: "Overfitting occurs when a model performs very well on training data but poorly on new/test data because it memorizes rather than generalizes." }
     ]
   },
 
   'study-planner': {
     title: "Weekly Study Plan",
     schedule: [
-      { day: "Monday", sessions: [{ start: "18:00", end: "19:30", subject: "AI", topic: "Neural Networks", activity: "Study" }, { start: "19:45", end: "21:00", subject: "DBMS", topic: "Normalization", activity: "Study" }] },
-      { day: "Tuesday", sessions: [{ start: "18:00", end: "19:30", subject: "AI", topic: "Revision — Neural Networks", activity: "Revision" }, { start: "19:45", end: "21:15", subject: "Computer Networks", topic: "TCP/IP Model", activity: "Study" }] },
-      { day: "Wednesday", sessions: [{ start: "18:00", end: "19:00", subject: "DBMS", topic: "SQL Queries", activity: "Practice" }, { start: "19:15", end: "20:45", subject: "AI", topic: "Search Algorithms", activity: "Study" }] },
-      { day: "Thursday", sessions: [{ start: "18:00", end: "19:30", subject: "Computer Networks", topic: "Routing Protocols", activity: "Study" }, { start: "19:45", end: "21:00", subject: "DBMS", topic: "Mock Test", activity: "Revision" }] },
-      { day: "Friday", sessions: [{ start: "18:00", end: "19:30", subject: "AI", topic: "Mock Test", activity: "Revision" }, { start: "19:45", end: "20:45", subject: "Computer Networks", topic: "Revision", activity: "Revision" }] },
-      { day: "Saturday", sessions: [{ start: "10:00", end: "12:00", subject: "All Subjects", topic: "Full Revision", activity: "Revision" }, { start: "14:00", end: "16:00", subject: "AI", topic: "Previous Year Questions", activity: "Practice" }] },
-      { day: "Sunday", sessions: [{ start: "10:00", end: "11:30", subject: "DBMS", topic: "Previous Year Questions", activity: "Practice" }, { start: "11:45", end: "13:00", subject: "Computer Networks", topic: "Previous Year Questions", activity: "Practice" }] }
+      { day: "Monday", sessions: [{ start: "18:00", end: "19:30", subject: "AI", topic: "Neural Networks", activity: "Study" }] },
+      { day: "Tuesday", sessions: [{ start: "18:00", end: "19:30", subject: "DBMS", topic: "Normalization", activity: "Study" }] }
     ]
   },
 
   summarizer: {
-    extractedText: "Natural Language Processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence concerned with the interactions between computers and human language, in particular how to program computers to process and analyze large amounts of natural language data. The goal is a computer capable of understanding the contents of documents, including the contextual nuances of the language within them. The technology can then accurately extract information and insights contained in the documents, as well as categorize and organize the documents themselves. Challenges in natural language processing frequently involve speech recognition, natural language understanding, and natural language generation.",
-    summary: "## Summary\nNatural Language Processing (NLP) is a field combining linguistics, computer science, and AI that focuses on enabling computers to understand, process, and generate human language.\n\n## Important Points\n- NLP allows computers to process and analyze large amounts of natural language data\n- Goal: computers that understand documents including contextual nuances\n- Can extract information, categorize, and organize documents\n- Key challenges: speech recognition, language understanding, and generation\n\n## Key Terms\n- **NLP** — Natural Language Processing\n- **Speech Recognition** — Converting spoken words to text\n- **Natural Language Understanding** — Comprehending meaning from text\n- **Natural Language Generation** — Producing human-readable text from data\n\n## Exam-Focused Points\n- NLP = intersection of linguistics + CS + AI\n- Three main tasks: recognition → understanding → generation\n- Applications: chatbots, translation, sentiment analysis, summarization"
+    extractedText: "Natural Language Processing (NLP) is a subfield of linguistics, computer science, and artificial intelligence...",
+    summary: "## Summary\nNatural Language Processing (NLP) is a field combining linguistics, computer science, and AI that focuses on enabling computers to understand, process, and generate human language.\n\n## Key Terms\n- **NLP** — Natural Language Processing\n- **Speech Recognition** — Converting spoken words to text"
   }
 };
 
-// ─── AI Call ─────────────────────────────────────────────────────────────────
+// ─── AI Provider Calls ────────────────────────────────────────────────────────
 
-async function callOpenAI(systemPrompt, userPrompt) {
+async function callOpenAI(systemPrompt, userPrompt, model, apiKey) {
   const response = await axios.post(
     'https://api.openai.com/v1/chat/completions',
     {
-      model: AI_MODEL,
+      model,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt }
@@ -319,32 +187,32 @@ async function callOpenAI(systemPrompt, userPrompt) {
     },
     {
       headers: {
-        'Authorization': `Bearer ${AI_API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json'
       },
-      timeout: 60000
+      timeout: 90000
     }
   );
   return response.data.choices[0].message.content;
 }
 
-async function callGemini(systemPrompt, userPrompt) {
+async function callGemini(systemPrompt, userPrompt, model, apiKey) {
   const prompt = `${systemPrompt}\n\n${userPrompt}`;
   const response = await axios.post(
-    `https://generativelanguage.googleapis.com/v1beta/models/${AI_MODEL}:generateContent?key=${AI_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
     {
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: { temperature: 0.7, maxOutputTokens: 3000 }
     },
-    { timeout: 60000 }
+    { timeout: 90000 }
   );
   return response.data.candidates[0].content.parts[0].text;
 }
 
-// ─── Tool Prompts ─────────────────────────────────────────────────────────────
+// ─── Prompt Builders ──────────────────────────────────────────────────────────
 
 function buildResumePrompt(data) {
-  const systemPrompt = `You are a professional resume writer. Your job is to improve the grammar, language, and presentation of the resume data provided. 
+  const systemPrompt = `You are a professional resume writer. Your job is to improve the grammar, language, and presentation of the resume data provided.
 CRITICAL RULES:
 - NEVER invent, add, or fabricate any degree, college, company, experience, skill, certification, or achievement.
 - Only improve existing language: make it professional, concise, and ATS-friendly.
@@ -467,7 +335,6 @@ Rules:
 - Break complex topics into numbered steps
 - Give exam-friendly explanations where appropriate
 - Do not invent facts
-- If the question is unclear, ask for clarification
 - Keep responses focused and concise (under 400 words)
 - Use markdown formatting: bold key terms, use bullet points, numbered steps`;
 
@@ -547,12 +414,18 @@ ${text}`;
   return { systemPrompt, userPrompt };
 }
 
+// ─── JSON tools (must return parsed objects) ──────────────────────────────────
+const JSON_TOOLS = new Set(['resume', 'ppt', 'mindmap', 'quiz', 'flashcards', 'study-planner']);
+
 // ─── Main Service Function ────────────────────────────────────────────────────
 
 async function processAIRequest(tool, payload) {
+  const { demoMode, provider, apiKey, model } = getConfig();
+
   // Demo mode — return realistic sample data
-  if (DEMO_MODE || !AI_API_KEY || AI_API_KEY === 'your_openai_api_key_here') {
-    await new Promise(r => setTimeout(r, 1200)); // simulate delay
+  if (demoMode || !apiKey || apiKey === 'your_openai_api_key_here') {
+    console.log(`[AI Service] Demo mode active (DEMO_MODE=${demoMode}, hasKey=${!!apiKey})`);
+    await new Promise(r => setTimeout(r, 800)); // simulate network latency
     const demoResult = demoData[tool];
     if (demoResult !== undefined) {
       return { success: true, data: demoResult, demo: true };
@@ -560,78 +433,91 @@ async function processAIRequest(tool, payload) {
     return { success: true, data: demoData.explanation, demo: true };
   }
 
+  console.log(`[AI Service] Live mode — provider=${provider} model=${model} tool=${tool}`);
+
   let systemPrompt, userPrompt;
 
   switch (tool) {
-    case 'resume': {
+    case 'resume':
       ({ systemPrompt, userPrompt } = buildResumePrompt(payload));
       break;
-    }
-    case 'notes': {
+    case 'notes':
       ({ systemPrompt, userPrompt } = buildNotesPrompt(payload.content, payload.style));
       break;
-    }
-    case 'ppt': {
+    case 'ppt':
       ({ systemPrompt, userPrompt } = buildPPTPrompt(
         payload.topic, payload.slides, payload.audience, payload.level, payload.instructions
       ));
       break;
-    }
-    case 'mindmap': {
+    case 'mindmap':
       ({ systemPrompt, userPrompt } = buildMindMapPrompt(payload.content));
       break;
-    }
-    case 'explain': {
+    case 'explain':
       ({ systemPrompt, userPrompt } = buildExplainPrompt(payload.topic));
       break;
-    }
-    case 'quiz': {
+    case 'quiz':
       ({ systemPrompt, userPrompt } = buildQuizPrompt(payload.topic, payload.count || 5, payload.difficulty || 'Medium'));
       break;
-    }
-    case 'doubt-solver': {
+    case 'doubt-solver':
       ({ systemPrompt, userPrompt } = buildDoubtSolverPrompt(payload.subject, payload.prompt, payload.history));
       break;
-    }
-    case 'flashcards': {
+    case 'flashcards':
       ({ systemPrompt, userPrompt } = buildFlashcardsPrompt(payload.topic, payload.material, payload.count || 8, payload.difficulty || 'Medium'));
       break;
-    }
-    case 'study-planner': {
-      ({ systemPrompt, userPrompt } = buildStudyPlannerPrompt(payload.subjects, payload.studyHours, payload.startTime, payload.endTime, payload.studyDays, payload.weakTopics));
+    case 'study-planner':
+      ({ systemPrompt, userPrompt } = buildStudyPlannerPrompt(
+        payload.subjects, payload.studyHours, payload.startTime,
+        payload.endTime, payload.studyDays, payload.weakTopics
+      ));
       break;
-    }
-    case 'summarizer': {
+    case 'summarizer':
       ({ systemPrompt, userPrompt } = buildSummarizerPrompt(payload.text));
       break;
-    }
     default:
       throw new Error(`Unknown tool: ${tool}`);
   }
 
   let rawResponse;
-  try {
-    if (AI_PROVIDER === 'gemini') {
-      rawResponse = await callGemini(systemPrompt, userPrompt);
-    } else {
-      rawResponse = await callOpenAI(systemPrompt, userPrompt);
+  const callFn = provider === 'gemini'
+    ? () => callGemini(systemPrompt, userPrompt, model, apiKey)
+    : () => callOpenAI(systemPrompt, userPrompt, model, apiKey);
+
+  // Retry up to 3 times with exponential backoff on 429
+  const retryDelays = [8000, 20000, 40000];
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      rawResponse = await callFn();
+      break;
+    } catch (err) {
+      const status = err.response?.status;
+      const errData = err.response?.data?.error?.message || err.message;
+      console.error(`[AI Service] Attempt ${attempt} error: status=${status}`, errData);
+
+      if (status === 401) throw new Error('Invalid API key. Please check your AI_API_KEY in .env');
+      if (status === 503) throw new Error('OpenAI is temporarily unavailable. Please try again shortly.');
+      if (err.code === 'ECONNABORTED' || err.code === 'ETIMEDOUT') throw new Error('Request timed out. The AI took too long to respond.');
+      if (err.code === 'ENOTFOUND') throw new Error('Cannot reach the AI service. Check your internet connection.');
+
+      if (status === 429) {
+        // Honour Retry-After header if present
+        const retryAfter = err.response?.headers?.['retry-after'];
+        const wait = retryAfter ? parseInt(retryAfter, 10) * 1000 : retryDelays[attempt - 1];
+        if (attempt < 3) {
+          console.log(`[AI Service] Rate limited — waiting ${wait / 1000}s before retry ${attempt + 1}...`);
+          await new Promise(r => setTimeout(r, wait));
+          continue;
+        }
+        throw new Error('Rate limit exceeded. Please wait 1–2 minutes and try again.');
+      }
+
+      throw new Error(`AI service error: ${errData || 'Please try again.'}`);
     }
-  } catch (err) {
-    if (err.response?.status === 401) throw new Error('Invalid API key. Please check your AI_API_KEY in .env');
-    if (err.response?.status === 429) throw new Error('Rate limit exceeded. Please wait and try again.');
-    if (err.code === 'ECONNABORTED') throw new Error('Request timed out. The AI took too long to respond.');
-    throw new Error('AI service unavailable. Please try again.');
   }
 
-  // For tools expecting JSON, parse and validate
-  if (['resume', 'ppt', 'mindmap', 'quiz', 'flashcards', 'study-planner'].includes(tool)) {
-    try {
-      const cleaned = rawResponse.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      const parsed = JSON.parse(cleaned);
-      return { success: true, data: parsed, demo: false };
-    } catch {
-      throw new Error('AI returned invalid JSON. Please try regenerating.');
-    }
+  // For tools expecting JSON: parse and validate
+  if (JSON_TOOLS.has(tool)) {
+    const parsed = parseJSON(rawResponse);
+    return { success: true, data: parsed, demo: false };
   }
 
   return { success: true, data: rawResponse, demo: false };

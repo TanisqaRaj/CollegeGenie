@@ -119,28 +119,46 @@ const Utils = (() => {
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
+    a.style.display = 'none';
+    a.rel = 'noopener';
     document.body.appendChild(a);
     a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 100);
     toast(`Downloaded: ${filename}`, 'success', 2500);
   }
 
-  // ── PDF Generation (jsPDF LaTeX-style) ───────────────────────
+  // ── PDF Generation ────────────────────────────────────────────
   function downloadPDF(htmlElement, filename = 'document.pdf') {
-    if (!window.jspdf) { toast('PDF library not loaded yet. Please wait.', 'error'); return; }
-    try {
+    if (window.html2canvas && window.jspdf) {
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
-      doc.html(htmlElement, {
-        callback(d) { d.save(filename); toast(`Downloaded: ${filename}`, 'success', 2500); },
-        x: 28, y: 28,
-        width: 540,
-        windowWidth: 794,
-        html2canvas: { scale: 1.4, useCORS: true }
-      });
-    } catch (e) {
-      toast('PDF generation failed. Try the Print option instead.', 'error');
+      html2canvas(htmlElement, { scale: 2, useCORS: true, backgroundColor: '#ffffff' })
+        .then(canvas => {
+          const imgData = canvas.toDataURL('image/png');
+          const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+          const pageW = doc.internal.pageSize.getWidth();
+          const pageH = doc.internal.pageSize.getHeight();
+          const imgH = (canvas.height * pageW) / canvas.width;
+          let y = 0;
+          while (y < imgH) {
+            if (y > 0) doc.addPage();
+            doc.addImage(imgData, 'PNG', 0, -y, pageW, imgH);
+            y += pageH;
+          }
+          doc.save(filename);
+          toast(`Downloaded: ${filename}`, 'success', 2500);
+        })
+        .catch(() => toast('PDF generation failed. Try printing instead (Ctrl+P).', 'error'));
+    } else if (window.jspdf) {
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+        doc.html(htmlElement, {
+          callback(d) { d.save(filename); toast(`Downloaded: ${filename}`, 'success', 2500); },
+          x: 28, y: 28, width: 540, windowWidth: 794
+        });
+      } catch { toast('PDF generation failed. Try printing instead (Ctrl+P).', 'error'); }
+    } else {
+      toast('PDF library not loaded yet. Please wait a moment and try again.', 'error');
     }
   }
 

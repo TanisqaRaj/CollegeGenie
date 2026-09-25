@@ -3,90 +3,120 @@
    Tablet and mobile breakpoints
    ============================================================ */
 
-/* ── Tablet (≤ 1024px) ──────────────────────────────────────── */
-@media (max-width: 1024px) {
-  :root { --sidebar-w: 200px; }
+/* ── Tablet (≤ 1100px) ──────────────────────────────────────── */
+@media (max-width: 1100px) {
+  :root { --sidebar-w: 220px; }
 
   .tool-layout { grid-template-columns: 1fr; }
-  .resume-preview-wrap { position: static; max-height: none; }
-  .resume-form-scroll { max-height: none; }
 
-  .slide-display { min-height: 300px; padding: 36px 40px; }
-  .slide-title-el { font-size: 1.35rem; }
-  .slide-bullets li { font-size: 0.95rem; }
+  .resume-preview-wrap { position: static; max-height: none; }
+  .resume-form-scroll  { max-height: none; }
+
+  .slide-display { min-height: 300px; padding: 34px 38px; }
+  .slide-title-el { font-size: 1.3rem; }
 
   .form-row-3 { grid-template-columns: 1fr 1fr; }
+
+  .tool-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 }
 
 /* ── Mobile (≤ 768px) ───────────────────────────────────────── */
 @media (max-width: 768px) {
-  /* Sidebar becomes off-canvas drawer */
+
+  /* ── Sidebar becomes off-canvas drawer ── */
   .sidebar {
     transform: translateX(-100%);
     z-index: 300;
-    width: 260px;
+    width: 268px;
     box-shadow: var(--shadow-lg);
   }
   .sidebar.open { transform: translateX(0); }
   .sidebar-close { display: flex; }
 
+  /* Reset main wrapper offset */
   .main-wrapper { margin-left: 0; }
 
+  /* Show hamburger */
   .hamburger { display: flex; }
 
-  /* Pages */
+  /* ── Page padding ── */
   .page { padding: 20px 16px; }
 
-  /* Hero */
-  .hero-title { font-size: 1.35rem; }
-  .hero-subtitle { font-size: 0.875rem; }
+  /* ── Hero ── */
+  .hero-title    { font-size: 1.25rem; }
+  .hero-subtitle { font-size: 0.84rem; }
+  .hero-stats    { gap: 16px; }
 
-  /* Tool grid */
-  .tool-grid { grid-template-columns: 1fr; gap: 16px; }
+  /* ── Tool grid ── */
+  .tool-grid { grid-template-columns: 1fr; gap: 14px; }
 
-  /* Form rows collapse to single column */
-  .form-row   { grid-template-columns: 1fr; }
-  .form-row-3 { grid-template-columns: 1fr; }
+  /* ── Forms ── */
+  .form-row   { grid-template-columns: 1fr; gap: 12px; }
+  .form-row-3 { grid-template-columns: 1fr; gap: 12px; }
 
-  /* Tool layout */
-  .tool-layout { grid-template-columns: 1fr; gap: 16px; }
+  /* ── Tool layout ── */
+  .tool-layout  { grid-template-columns: 1fr; gap: 14px; }
+  .tool-panel-scroll { max-height: none; }
 
-  /* Action bars */
-  .action-bar { padding: 12px 16px; gap: 8px; }
-  .action-bar .btn { flex: 1 1 calc(50% - 4px); justify-content: center; font-size: 0.8rem; padding: 9px 12px; }
+  /* ── Navbar ── */
+  .navbar { padding: 0 14px; gap: 10px; }
 
-  /* Notes options */
+  /* ── Action bars ── */
+  .action-bar { padding: 10px 14px; gap: 7px; }
+  .action-bar .btn {
+    flex: 1 1 calc(50% - 4px);
+    justify-content: center;
+    font-size: 0.78rem;
+    padding: 8px 10px;
+  }
+
+  /* ── Notes options ── */
   .notes-options { flex-wrap: wrap; }
-  .notes-option-btn { flex: 1; text-align: center; }
+  .notes-option-btn { flex: 1; text-align: center; min-width: 80px; }
 
-  /* Resume preview */
-  .resume-preview { padding: 24px 20px; font-size: 9.5pt; }
-  .resume-preview h1.resume-name { font-size: 15pt; }
+  /* ── Resume ── */
+  .resume-preview      { padding: 22px 18px; font-size: 9.5pt; }
+  .resume-preview h1.resume-name { font-size: 14pt; }
+  .resume-tabs .resume-tab { font-size: 0.78rem; padding: 6px 8px; }
 
-  /* PPT slide */
-  .slide-display { min-height: 240px; padding: 24px 24px; }
-  .slide-title-el { font-size: 1.1rem; margin-bottom: 16px; }
+  /* ── PPT ── */
+  .slide-display  { min-height: 230px; padding: 22px 22px; }
+  .slide-title-el { font-size: 1.1rem; margin-bottom: 14px; }
   .slide-bullets li { font-size: 0.875rem; }
 
-  /* Mind map */
-  .mindmap-canvas { padding: 16px; }
-  .mm-label { font-size: 0.78rem; padding: 5px 12px; }
-  .mm-label.depth-0 { font-size: 0.85rem; }
+  /* ── Mind map ── */
+  .mindmap-canvas { padding: 14px; }
+  .mm-label { font-size: 0.76rem; padding: 4px 11px; }
+  .mm-label.depth-0 { font-size: 0.82rem; padding: 6px 14px; }
 
-  /* Breadcrumb */
-  .breadcrumb { font-size: 0.8rem; }
+  /* ── Tool header ── */
+  .tool-header-text h1 { font-size: 1.1rem; }
+  .tool-header-text p  { font-size: 0.8rem; }
 
-  /* Tool header */
-  .tool-header h1 { font-size: 1.15rem; }
-  .tool-header p  { font-size: 0.82rem; }
+  /* ── Breadcrumb ── */
+  .breadcrumb { font-size: 0.78rem; }
+
+  /* ── Flashcard ── */
+  .fc-scene { height: 190px; }
 }
 
 /* ── Small Mobile (≤ 420px) ─────────────────────────────────── */
 @media (max-width: 420px) {
+  .page { padding: 16px 12px; }
+
+  .hero-title { font-size: 1.1rem; }
+
   .action-bar .btn { flex: 1 1 100%; }
-  .resume-tabs .resume-tab { font-size: 0.75rem; padding: 7px 8px; }
-  .notes-options { gap: 6px; }
-  .notes-option-btn { font-size: 0.78rem; padding: 6px 10px; }
-  .slide-title-el { font-size: 1rem; }
-  .slide-display { padding: 20px 18px; }
+
+  .notes-options { gap: 5px; }
+  .notes-option-btn { font-size: 0.76rem; padding: 5px 10px; }
+
+  .slide-title-el { font-size: 0.98rem; }
+  .slide-display  { padding: 18px 16px; min-height: 200px; }
+  .slide-controls { padding: 10px 12px; }
+
+  .resume-tabs .resume-tab { font-size: 0.72rem; padding: 5px 6px; }
+
+  .tool-card { padding: 16px 16px 14px; }
+  .tool-card-title { font-size: 0.9rem; }
 }
