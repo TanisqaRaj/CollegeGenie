@@ -7,6 +7,7 @@ const cors = require('cors');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
 const aiRouter = require('./routes/ai');
+const sheetsProxyRouter = require('./routes/sheetsProxy');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 // ─── API Routes ───────────────────────────────────────────────────────────────
 
 app.use('/api/ai', aiRouter);
+app.use('/api/sheets-proxy', sheetsProxyRouter);
 
 // Catch-all: serve index.html for SPA routing
 app.get('*', (req, res) => {

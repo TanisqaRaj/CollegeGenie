@@ -428,17 +428,10 @@ window.GoogleSheetsModule = (() => {
   }
 
   async function fetchFromSheet(url) {
-    // Apps Script CORS workaround: use no-cors mode won't give body,
-    // so we use the proxy approach via our own backend isn't needed —
-    // Apps Script supports CORS when "Anyone" access is set.
-    const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+    const res = await fetch(`/api/sheets-proxy?url=${encodeURIComponent(url)}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
     let json;
-    try { json = await res.json(); } catch {
-      throw new Error('Invalid JSON from Apps Script.');
-    }
-
+    try { json = await res.json(); } catch { throw new Error('Invalid JSON from Apps Script.'); }
     if (!json.success) throw new Error(json.message || 'Apps Script returned failure.');
     return json.data || [];
   }
@@ -513,11 +506,10 @@ window.GoogleSheetsModule = (() => {
   }
 
   async function postToSheet(url, record) {
-    const res = await fetch(url, {
-      method:   'POST',
-      redirect: 'follow',
-      headers:  { 'Content-Type': 'text/plain;charset=utf-8' },
-      body:     JSON.stringify(record)
+    const res = await fetch(`/api/sheets-proxy?url=${encodeURIComponent(url)}`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(record),
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     let json;
@@ -525,10 +517,6 @@ window.GoogleSheetsModule = (() => {
     if (!json.success) throw new Error(json.message || 'POST failed.');
     return json;
   }
-
-  // Note: Apps Script requires Content-Type: text/plain for POST when no
-  // server-side CORS preflight configuration is available. The Apps Script
-  // doPost handler reads e.postData.contents and parses JSON from it.
 
   // ─────────────────────────────────────────────────────────────
   // SEARCH & FILTER
