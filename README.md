@@ -1,4 +1,4 @@
-# AI Student Toolkit
+# CollegeGenie
 
 > **10 Smart AI Tools for Students**
 
